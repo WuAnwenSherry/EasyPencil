@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/canvas",
+    "pages/logs/logs"
+    
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#ea6a46",
+    "navigationBarTitleText": "Easy Pencil",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "white",
+    "enablePullDownRefresh": false
+  }
+}

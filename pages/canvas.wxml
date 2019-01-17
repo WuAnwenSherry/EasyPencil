@@ -1,0 +1,112 @@
+<!--pages/canvas/canvas.wxml-->
+<view class="canvascontainer">
+<canvas class="canvas" id="canvas" canvas-id="canvas" style="width: 700rpx; height: 800rpx;" disable-scroll="true" bindtouchstart="canvasStart" bindtouchmove="canvasMove" bindtouchend="canvasEnd" touchcancel="canvasEnd" binderror="canvasIdErrorCallback"></canvas>
+</view>
+
+
+<view class="canvascontainerforbutton">
+<button type="default" bindtap="bolder">bolder</button>
+<button type="default" bindtap="thinner">thinner</button>
+<button class="{{rubberison?'buttonhover':'default'}}" bindtap="rubber" >rubber</button>
+</view>
+
+<view class="canvascontainerforbutton">
+<button type="default" bindtap="colorchoose">color</button>
+<button type="default" bindtap="colorG">color-G+</button>
+<button type="default" bindtap="colorB">color-B+</button>
+</view>
+<button type="default" bindtap="cleardraw">clear</button>
+<button type="default" bindtap="getimg">export</button>
+<!--弹窗-->
+
+<view class="modal-mask" bindtap="hideModal" catchtouchmove="preventTouchMove" wx:if="{{showModal}}"></view>
+<view class="modal-dialog" wx:if="{{showModal}}">
+             <view class="modal-title">Choose your color</view>
+
+<view class="button-row">
+  <!--view class="button-colum">
+     <button class="button-OffWhite-default" size="mini" bindtap="button-OffWhite">OffWhite</button>
+     <button class="button-Cream-default"size="mini" bindtap="button-Cream">Cream</button>
+     <button class="button-Beige-default"size="mini" bindtap="button-Beige">Beige</button>
+     <button class="button-Sand-default" size="mini"bindtap="button-Sand">Sand</button>
+     <button class="button-Camel-default"size="mini" bindtap="button-Camel">Camel</button>
+     <button class="button-Brown-default" size="mini"bindtap="button-Brown">Brown</button>
+  </view-->
+  <view class="button-colum">
+      <button wx:for="{{colorNeutral}}"wx:key="*this" id="{{index}}" size="mini"style="background:{{item}};color:{{item}};width:100%;" bindtap="changeNeutralColor">{{item}}</button>
+    </view>
+  <!--view class="button-colum">
+     <button class="button-Silver-default" size="mini"bindtap="button-Silver">Silver</button>
+     <button class="button-LightGrey-default"size="mini" bindtap="button-LightGrey">LightGrey</button>
+     <button class="button-LightCoolGrey-default" size="mini"bindtap="button-LightCoolGrey">CoolGrey</button>
+     <button class="button-Grey-default" size="mini"bindtap="button-Grey">Grey</button>
+     <button class="button-DarkGrey-default"size="mini" bindtap="button-DarkGrey">DarkGrey</button>
+     <button class="button-Charcoal-default"size="mini" bindtap="button-Charcoal">Charcoal</button>
+  </view-->
+    <view class="button-colum">
+      <button wx:for="{{colorGrey}}"wx:key="*this" id="{{index}}" size="mini"style="background:{{item}};color:{{item}};width:100%;" bindtap="changeGreyColor">{{item}}</button>
+    </view>
+    <!--view class="button-colum">
+     <button class="button-LightBlue-default" size="mini"bindtap="button-LightBlue">LightBlue</button>
+     <button class="button-SeaBlue-default"size="mini" bindtap="button-SeaBlue">SeaBlue</button>
+     <button class="button-Turquoise-default"size="mini" bindtap="button-Turquoise">Turquoise</button>
+     <button class="button-Lavender-default"size="mini" bindtap="button-Lavender">Lavender</button>
+     <button class="button-Royal-default" size="mini"bindtap="button-Royal">Royal</button>
+     <button class="button-Navy-default" size="mini"bindtap="button-Navy">Navy</button>
+  </view-->
+    <view class="button-colum">
+    <button wx:for="{{colorBlue}}"wx:key="*this" id="{{index}}" size="mini"style="background:{{item}};color:{{item}};width:100%;" bindtap="changeBlueColor">{{item}}</button>
+    </view>
+</view>
+
+<view class="button-row">
+  <!--view class="button-colum">
+     <button class="button-Yellow-default" size="mini" bindtap="button-Yellow">Yellow</button>
+     <button class="button-Gold-default"size="mini" bindtap="button-Gold">Gold</button>
+     <button class="button-Ochre-default"size="mini" bindtap="button-Ochre">Ochre</button>
+     <button class="button-Orange-default" size="mini"bindtap="button-Orange">Orange</button>
+     <button class="button-Bronze-default"size="mini" bindtap="button-Bronze">Bronze</button>
+     <button class="button-Rust-default" size="mini"bindtap="button-Rust">Rust</button>
+  </view-->
+ 
+  <!--view class="button-colum">
+     <button class="button-Pink-default" size="mini"bindtap="button-Pink">Pink</button>
+     <button class="button-DeepPink-default" size="mini"bindtap="button-DeepPink">DeepPink</button>
+     <button class="button-Fuchsia-default"size="mini" bindtap="button-Fuchsia">Fuchsia</button>
+     <button class="button-Red-default" size="mini"bindtap="button-Red">Red</button>
+     <button class="button-Burgundy-default"size="mini" bindtap="button-Burgundy">Burgundy</button>
+     <button class="button-Purple-default"size="mini" bindtap="button-Purple">Purple</button>
+  </view-->
+      <view class="button-colum">
+      <button wx:for="{{colorYellow}}"wx:key="*this" id="{{index}}" size="mini"style="background:{{item}};color:{{item}};width:100%;" bindtap="changeYellowColor">{{item}}</button>
+    </view>
+    <view class="button-colum">
+      <button wx:for="{{colorPink}}"wx:key="*this" id="{{index}}" size="mini"style="background:{{item}};color:{{item}};width:100%;" bindtap="changePinkColor">{{item}}</button>
+    </view>
+    <view class="button-colum">
+      <button wx:for="{{colorArray}}"wx:key="*this" id="{{index}}" size="mini"style="background:{{item}};color:{{item}};width:100%;" bindtap="changeColor">{{item}}</button>
+    </view>
+    <!--view class="button-colum">
+     <button class="button-Mint-default" size="mini"bindtap="button-Mint" id="">Mint</button>
+     <button class="button-AppleGreen-default"size="mini"bindtap="button-AppleGreen">AppleGreen</button>
+     <button class="button-Green-default"size="mini" bindtap="button-Green">Green</button>
+     <button class="button-ArmyGreen-default" size="mini"bindtap="button-ArmyGreen"id="34">ArmyGreen</button>
+     <button class="button-Olive-default"size="mini" bindtap="button-Olive"id="35">Olive</button>
+     <button class="button-Khaki-default" size="mini"bindtap="button-Khaki"id="36">Khaki</button>
+    </view-->
+
+    <!--view class="button-colum">
+     <button class="button-Mint-default" size="mini"bindtap="button-Mint">Mint</button>
+     <button class="button-AppleGreen-default"size="mini"bindtap="button-AppleGreen">AppleGreen</button>
+     <button class="button-Green-default"size="mini" bindtap="button-Green">Green</button>
+     <button class="button-ArmyGreen-default" size="mini"bindtap="button-ArmyGreen">ArmyGreen</button>
+     <button class="button-Olive-default"size="mini" bindtap="button-Olive">Olive</button>
+     <button class="button-Khaki-default" size="mini"bindtap="button-Khaki">Khaki</button>
+    </view-->
+ </view>
+  <view class="button-row">  
+    <button size="mini"style="background:{{colorselected}};">{{color_text}}</button>  
+    <button type="default"bindtap="onConfirm"data-status="confirm">confirm</button>  
+    </view>
+  
+</view>
