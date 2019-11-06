@@ -1,4 +1,6 @@
-#Easy Pencil
+#Easy Pencil 扫码进入
+！[image](https://github.com/WuAnwenSherry/EasyPencil/blob/master/QRcode.jpg)
+
 主页面显示如下
 
 ![image](https://github.com/WuAnwenSherry/EasyPencil/blob/master/MainPage.jpg)
