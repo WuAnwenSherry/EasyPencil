@@ -1,21 +1,36 @@
 // canvas 全局配置
 var context = null;// 使用 wx.createContext 获取绘图上下文 context
+var contextsmall=null;
 var isButtonDown = false; //指尖是否接触
 var arrx = [];
 var arry = [];
 var arrz = [];
 var canvasw = 0;
 var canvash = 0;
+var btnheight=0;
 var linewidth = 1;
 var eraser = false;
 var color_R = 0;
 var color_G = 0;
 var color_B = 0;
+var colorchoosetext=[];
+var colorselected=[];
+var filetemp=[];
+var filetempundo=[];
+var filetempredo=[];
+var importfile=[];
+var imgwidth = [];
+var imgheight = [];
+var rpx;
 //获取系统信息
 wx.getSystemInfo({
   success: function (res) {
-    canvasw = res.windowWidth;//设备宽度
-    canvash = res.windowHeight;
+    rpx = res.windowWidth/375;
+    canvasw = rpx*375;//设备宽度
+    canvash = 0.68*rpx*(res.windowHeight);
+    btnheight = 0.2 * rpx * (res.windowHeight);
+    console.log(canvasw);
+    console.log(canvash);
   }
 });
 //data:{
@@ -27,11 +42,20 @@ wx.getSystemInfo({
 //注册页面-
 Page({
   data: {
+    pathCount:0,
+    contextCount:0,
+    curContexts: [],
+
+    canvasWidth: canvasw,
+    canvasHeight: canvash,
+    buttonsHeight: btnheight,
+
     rubberison: false,
     showModal: false,
     clickId: -1,
-    colorselected: 'white',
-    color_text: 'color_default',
+    linewidthnow:1,
+    colorselected: 'black',
+    colorchoosetext: 'color_default',
     colorNeutraltext: ['OffWhite', 'Cream', 'Beige', 'Sand', 'Camel', 'Brown'],
     colorNeutral: ['#EFEEE5', '#E8E1C7', '#CDBB99', '#A69373', '#967353', '#664D3B'],
     colorGreytext: ['Silver', 'LightGrey', 'LightCoolGrey', 'Grey', 'DarkGrey', 'Charcoal'],
@@ -51,10 +75,25 @@ Page({
   },
 
   canvasStart: function (event) {
+    context.save();
+    if (!this.data.showModal){
+      wx.canvasToTempFilePath({
+        x: 0,
+        y: 0,
+        //width: canvasw,
+        //height: canvash,
+        //destWidth: canvasw,
+        //destHeight: canvash,
+        canvasId: 'canvas',
+        success: function (res) {
+          filetempundo = res.tempFilePath;
+        }
+      });
     isButtonDown = true;
     arrz.push(0);
     arrx.push(event.changedTouches[0].x);
     arry.push(event.changedTouches[0].y);
+    }
   },
 
   canvasMove: function (event) {
@@ -63,18 +102,33 @@ Page({
       arrx.push(event.changedTouches[0].x);
       arry.push(event.changedTouches[0].y);
     }
-
     context.beginPath()
-    context.setLineWidth(linewidth)
-    for (var i = 0; i < arrx.length; i++) {
+    if(eraser)
+    {
+      context.setLineWidth(linewidth+4);
+      for (var i = 0; i < arrx.length; i++) {
+        if (arrz[i] == 0) {
+          context.moveTo(arrx[i], arry[i])
+        } else {
+          context.clearRect(arrx[i] - (linewidth + 4), arry[i] - (linewidth + 4), 2 * (linewidth + 4), 2 * (linewidth + 4))
+        }
+      }
+      context.draw(true)
+    }
+    else
+    {
+      context.setStrokeStyle(this.data.colorselected);
+      context.setLineWidth(linewidth);
+      for (var i = 0; i < arrx.length; i++) {
       if (arrz[i] == 0) {
         context.moveTo(arrx[i], arry[i])
       } else {
         context.lineTo(arrx[i], arry[i])
       }
     }
-    context.stroke()
-    context.draw(true)
+    context.stroke();
+    context.draw(true);
+    }
   },
 
   canvasEnd: function (event) {
@@ -82,32 +136,65 @@ Page({
     arrx = [];
     arry = [];
     arrz = [];
+    wx.canvasToTempFilePath({
+      x: 0,
+      y: 0,
+      //width: canvasw,
+      //height: canvash,
+      //destWidth: canvasw,
+      //destHeight: canvash,
+      canvasId: 'canvas',
+      success: function (res) {
+        filetempredo = res.tempFilePath;
+        
+      }
+    });
+  },
+
+  /**
+  * 回退一步
+  */
+  back: function (options) {
+    context.drawImage(filetempundo, 0, 0, canvasw, canvash);
+    context.draw();
+    //console.log(this.data.colorselected);
+  },
+  forward: function (options) {
+    context.drawImage(filetempredo, 0, 0, canvasw, canvash);
+    context.draw();
   },
   bolder: function () {
     if (linewidth < 10)
       linewidth++;
     else
       linewidth = 10;
+    this.linewidthshow();
+    this.setData({ linewidthnow: linewidth });
   },
   thinner: function () {
     if (linewidth > 1)
       linewidth--;
     else
       linewidth = 1;
+    this.linewidthshow();
+    this.setData({ linewidthnow: linewidth });
   },
   rubber: function () {
     eraser = !eraser;
     this.setData({
       rubberison: !this.data.rubberison
     })
-    if (eraser) {
-      context.setStrokeStyle('white');
-      context.setLineWidth(linewidth + 8);
-    }
-    else {
-      context.setStrokeStyle('#000000');
-      context.setLineWidth(linewidth);
-    }
+  },
+  linewidthshow:function(){
+    //console.log('lineshow');
+    contextsmall.setStrokeStyle(this.data.colorselected);
+    contextsmall.setLineWidth(linewidth);
+    contextsmall.moveTo(0, 20);
+    contextsmall.lineTo(40, 20);
+    contextsmall.stroke();
+    contextsmall.draw(false);
+  },
+  preventTouchMove:function(e){
   },
   colorchoose: function () {
     this.setData({
@@ -117,48 +204,45 @@ Page({
   changeNeutralColor: function (e) {
     this.setData({
       colorselected: this.data.colorNeutral[e.currentTarget.id],
-      color_text: this.data.colorNeutraltext[e.currentTarget.id]
+      colorchoosetext: this.data.colorNeutraltext[e.currentTarget.id]
     })
   },
   changeGreyColor: function (e) {
     this.setData({
       colorselected: this.data.colorGrey[e.currentTarget.id],
-      color_text: this.data.colorGreytext[e.currentTarget.id]
+      colorchoosetext: this.data.colorGreytext[e.currentTarget.id]
     })
   },
   changeBlueColor: function (e) {
     this.setData({
-      colorselected: this.data.colorBlue[e.currentTarget.id],
-      color_text: this.data.colorBluetext[e.currentTarget.id]
+      colorselected: this.data.colorBlue[e.currentTarget.id]
+    })
+    this.setData({
+      colorchoosetext: this.data.colorBluetext[e.currentTarget.id]
     })
   },
   changeYellowColor: function (e) {
     this.setData({
       colorselected: this.data.colorYellow[e.currentTarget.id],
-      color_text: this.data.colorYellowtext[e.currentTarget.id]
+      colorchoosetext: this.data.colorYellowtext[e.currentTarget.id]
     })
   },
   changePinkColor: function (e) {
-    //var index=0;
-    //console.log(e.currentTarget.id);
-    //console.log(this.data.colorArray);
     this.setData({
       colorselected: this.data.colorPink[e.currentTarget.id],
-      color_text: this.data.colorPinktext[e.currentTarget.id]
+      colorchoosetext: this.data.colorPinktext[e.currentTarget.id]
     })
   },
   changeColor: function (e) {
-    //var index=0;
-    console.log(e.currentTarget.id);
-    console.log(this.data.colorArray);
     this.setData({
       colorselected: this.data.colorArray[e.currentTarget.id],
-      color_text: this.data.colortext[e.currentTarget.id]
+      colorchoosetext: this.data.colortext[e.currentTarget.id]
     })
   },
   onConfirm: function () {
     context.setStrokeStyle(this.data.colorselected);
     this.hideModal();
+    this.linewidthshow();
   },
   cleardraw: function () {
     //清除画布
@@ -168,6 +252,54 @@ Page({
     context.clearRect(0, 0, canvasw, canvash);
     context.draw(true);
   },
+  //connect and upload the file
+  connectrequest:function(){
+    wx.uploadFile({
+      url: 'http://localhost:8080/webtest/myservlet',
+      header: { "Content-Type": "multipart/form-data" },
+      filePath: String(filetempredo),
+      name: 'file',
+      formData:{
+        "name":"testpic",
+        "message":"test message"
+      },
+      success: function (res) {
+        console.log(res);
+      }
+    });
+  },
+   //import
+  importimage:function(){
+    //const importfile;
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['original','compressed'],
+      sourceType: ['album', 'camera'],
+      success(res) {
+        // tempFilePath可以作为img标签的src属性显示图片
+        importfile = res.tempFilePaths[0];
+        wx.getImageInfo({
+          src: importfile,
+          success: function (res) {
+              imgwidth=res.width;
+              imgheight=res.height;
+              if(imgwidth/imgheight>canvasw/canvash){
+            context.drawImage(importfile, 0, 0, canvasw, canvasw * imgheight / imgwidth);}
+              else { context.drawImage(importfile, 0, 0, canvash*imgwidth/imgheight, canvash);}
+            context.draw();
+          }
+        });
+      },fail(res){
+        wx.showModal({
+          title: 'Warning',
+          content: 'choose image failure！',
+          showCancel: false
+        });
+      }
+    });
+  },
+
+
   //export按钮的getimg
   getimg: function () {
     /*
@@ -180,18 +312,17 @@ Page({
       return false;
     };
     */
-    var filetemp;
     wx.canvasToTempFilePath({
       x: 0,
       y: 0,
-      width: 300,
-      height: 500,
-      destWidth: 300,
-      destHeight: 500,
+      //width: 700,
+      //height: 800,
+      //destWidth: canvasw,
+      //destHeight: canvash,
       canvasId: 'canvas',
       success: function (res) {
         filetemp = res.tempFilePath;
-        console.log(res.tempFilePath);
+        //console.log(res.tempFilePath);
       }
     });
     wx.getSetting({
@@ -209,7 +340,8 @@ Page({
                     title: 'Save success'
                   });
                 },
-                fail() {
+                fail:function(error) {
+                  console.log(error);
                   wx.showToast({
                     title: 'Save failure'
                   });
@@ -229,7 +361,8 @@ Page({
                 title: 'Save success'
               });
             },
-            fail() {
+            fail:function(error) {
+              console.log(error);
               wx.showToast({
                 title: 'Save failure'
               });
@@ -247,7 +380,6 @@ Page({
   hideModal: function () {
     this.setData({
       showModal: false
-
     });
   },
   /**
@@ -256,10 +388,21 @@ Page({
   onLoad: function (options) {
     // 使用 wx.createContext 获取绘图上下文 context
     context = wx.createCanvasContext('canvas');
+    contextsmall = wx.createCanvasContext('canvasmall');
+    this.setData({
+      canvasWidth: canvasw,
+      canvasHeight: canvash
+    })
     context.beginPath();
     context.setStrokeStyle('#000000');
     //context.setLineWidth(1);
     context.setLineCap('round');
     context.setLineJoin('round');
+    contextsmall.beginPath();
+    contextsmall.setStrokeStyle('black');
+    //context.setLineWidth(1);
+    contextsmall.setLineCap('round');
+    contextsmall.setLineJoin('round');
+    this.linewidthshow();
   }
 })//注册页面-end-

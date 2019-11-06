@@ -10,7 +10,6 @@
   box-sizing: border-box;
 } 
 .canvascontainerforbutton {
-  height: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -176,15 +175,16 @@
 }
 
 .modal-dialog {
-  width: 600rpx;
-  height:840rpx;
+  width:650rpx;
+  height:1000rpx;
   overflow: hidden;
   position: fixed;
-  top: 30%;
+  top: 10%;
   left: 0;
   z-index: 9999;
   background: #f9f9f9;
-  margin: -180rpx 105rpx;
+  margin-left: 60rpx;
+  margin-right:130rpx;
   border-radius: 36rpx;
   align-items: center;
 }
