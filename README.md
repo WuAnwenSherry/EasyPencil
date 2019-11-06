@@ -1,7 +1,7 @@
 #Easy Pencil
 主页面显示如下
 
-![image](http://github.com/WuAnwenSherry/EasyPencil/blob/master/MainPage.jpg)
+![image](https://github.com/WuAnwenSherry/EasyPencil/blob/master/MainPage.jpg)
 
 undo:撤销一次操作，只能撤回一次
 
@@ -23,8 +23,8 @@ export:保存大作到本地
 
 建议用法：涂鸦,作品展示
 
-![image](http://github.com/WuAnwenSherry/EasyPencil/blob/master/masterpiece1.jpg)
+![image](https://github.com/WuAnwenSherry/EasyPencil/blob/master/masterpiece1.jpg)
 
-![image](http://github.com/WuAnwenSherry/EasyPencil/blob/master/masterpiece2.jpg)
+![image](https://github.com/WuAnwenSherry/EasyPencil/blob/master/masterpiece2.jpg)
 
-![image](http://github.com/WuAnwenSherry/EasyPencil/blob/master/masterpiece3.jpg)
+![image](https://github.com/WuAnwenSherry/EasyPencil/blob/master/masterpiece3.jpg)
