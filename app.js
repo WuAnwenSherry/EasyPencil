@@ -32,6 +32,18 @@ App({
         }
       }
     })
+
+    if(!wx.cloud){
+      console.error('2.2.3 will be OK for cloud')
+    }
+    else{
+      wx.cloud.init({
+        env:'sherrysolitude-0f46ca',
+        traceUser:true,
+      })
+    }
+
+
   },
   globalData: {
     userInfo: null

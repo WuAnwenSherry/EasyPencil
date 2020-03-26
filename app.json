@@ -1,7 +1,9 @@
 {
   "pages": [
-    "pages/canvas",
-    "pages/logs/logs"
+    "pages/index/index",
+    "pages/canvas_Imagedata/canvas",
+    "pages/logs/logs",
+    "pages/canvasorigin/canvas"
     
   ],
   "window": {
@@ -11,5 +13,7 @@
     "navigationBarTextStyle": "black",
     "backgroundColor": "white",
     "enablePullDownRefresh": false
-  }
+  },
+  "sitemapLocation": "sitemap.json",
+  "cloud": true
 }
