@@ -1,13 +1,27 @@
 <!--index.wxml-->
 <view class="container">
-  <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+  <!--<view class="userinfo">-->
+  <image class="animationSlow" src='../../masterpiece1.jpg'></image>
+  
+   <!--
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" bindtap="bindViewTap" image=""></button>
     <block wx:else>
+    <!--
       <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      
     </block>
   </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
+  -->
   </view>
-</view>
+
+
+  <view class="usermotto">
+  I am pepper Pig. I'am not grumpy.
+  </view>
+  <view style="width:100%; margin-top: 20px;display: flex; flex-direction:row;align-items: center">
+   <button style="width:100%;background:pink" bindtap="bindEasyPencil">Easy Pencil </button>
+  <button   style="width:100%;background:#A9D1BD;"open-type="getUserInfo" bindgetuserinfo="getUserInfo" bindtap="bindViewTap">Shared Pencil</button>
+    <!--<text class="user-motto">{{motto}}</text>-->
+  </view>
+

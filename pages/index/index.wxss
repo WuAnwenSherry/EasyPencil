@@ -3,11 +3,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 60rpx;
 }
 
 .userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
+  width: 256rpx;
+  height: 256rpx;
   margin: 20rpx;
   border-radius: 50%;
 }
@@ -17,5 +18,41 @@
 }
 
 .usermotto {
-  margin-top: 200px;
+  text-indent: 70rpx;    
+	text-align: left;
+  display: flex;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.animationSlow {
+  width: 400rpx;
+  height: 400rpx;
+  background-color: rgb(248, 247, 246);
+  animation-name: myfirst; /*动画的名称 */
+  animation-duration: 10000ms; /*动画从开始到结束的时间*/
+  animation-timing-function: linear; /*动画执行快慢的参数*/
+  animation-iteration-count: infinite; /*动画执行多少次的参数*//*以下是兼容ios所需，参数意义与上相同*/
+  -webkit-animation-name: myfirst;
+  -webkit-animation-duration: 10000ms;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+}
+@keyframes myfirst {
+  /*开始转的角度*/
+  from {
+    transform: rotate(0deg);
+  }/*结束的角度*/
+  to {
+    transform: rotate(360deg);
+  }
+}
+/*兼容ios*/
+@-webkit-keyframes myfirst {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

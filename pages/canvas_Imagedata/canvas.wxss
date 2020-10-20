@@ -20,6 +20,13 @@
 .buttonhover {
   background: red;
 }
+
+.buttonhover_share {
+  background: greenyellow;
+}
+.buttonhover_share_connect {
+  background: rgb(16, 167, 236);
+}
 /** 添加自定义button点击态样式类**/
 .button-colum {
   display: flex;

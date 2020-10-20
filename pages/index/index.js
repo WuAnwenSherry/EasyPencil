@@ -4,18 +4,43 @@ const app = getApp()
 
 Page({
   data: {
-    motto: 'Hello World',
+    motto: 'Get Started!',
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
   //事件处理函数
   bindViewTap: function() {
+    wx.getUserInfo({
+      success: res => {
+        wx.navigateTo({
+          //url: '../canvas' 
+          url:'../canvas_Imagedata/canvas'
+        })
+      }
+    })
+
+
+   /*
+    wx.getSetting({
+      success: res => {
+        if (res.authSetting['scope.userInfo']) {
+          wx.navigateTo({
+            url: '../canvas'
+          })
+        
+        }
+      }
+    })
+    */
+  },
+  bindEasyPencil:function(){
     wx.navigateTo({
-      url: '../logs/logs'
+      url: '../canvasorigin/canvas'
     })
   },
   onLoad: function () {
+    /*
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -29,6 +54,7 @@ Page({
           userInfo: res.userInfo,
           hasUserInfo: true
         })
+
       }
     } else {
       // 在没有 open-type=getUserInfo 版本的兼容处理
@@ -42,7 +68,9 @@ Page({
         }
       })
     }
+    */
   },
+  
   getUserInfo: function(e) {
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo
@@ -51,4 +79,8 @@ Page({
       hasUserInfo: true
     })
   }
-})
+}
+)
+
+// 云函数入口文件
+

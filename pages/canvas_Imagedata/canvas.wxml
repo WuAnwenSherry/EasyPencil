@@ -11,17 +11,34 @@ disable-scroll="true" bindtouchstart="canvasStart" bindtouchmove="canvasMove" bi
 style="background:white;width:40px; height:40px;"
 disable-scroll="true" binderror="canvasIdErrorCallback">
 </canvas>
-<button type="default" bindtap="back">undo</button>
-<button type="default" bindtap="forward">redo</button>
-<button type="default" bindtap="bolder">bolder</button>
-<button type="default" bindtap="thinner">thinner</button>
-<button class="{{rubberison?'buttonhover':'default'}}" bindtap="rubber" >rubber</button>
+<!--<button type="default" bindtap="back">undo</button>
+<button type="default" bindtap="forward">redo</button>-->
+<button type="default" style="width:30%"bindtap="bolder">bolder</button>
+<button type="default" style="width:30%" bindtap="thinner">thinner</button>
+<button class="{{rubberison?'buttonhover':'default'}}" style="width:30%" bindtap="rubber" >rubber</button>
  </view>
 <button type="default" style="width:100%;color:{{colorselected}};" bindtap="colorchoose">Choose color</button>
 
 <view style="width:100%; display: flex; flex-direction:row;align-items: center">
-<button type="default" bindtap="cleardraw">clear</button>
-<button type="default" bindtap="connectrequest">connect</button>
+<button type="default" open-type="getUserInfo" bindtap="cleardraw">clear</button>
+<form bindsubmit='connectrequest'>
+<view style="width:100%; display: flex; flex-direction:row;align-items: center">
+<input type='text' name='roomnum' placeholder="room number=\>"></input>
+
+<view wx:if="{{sharescreen_p&&connectStatus}}">
+<button class="{{'buttonhover_share_connect'}}" formType="submit" >share</button>
+</view>
+<view wx:elif="{{sharescreen_p}}">
+   <button class="{{'buttonhover_share'}}" formType="submit" >share</button>
+</view>
+<view wx:else>
+   <button class="{{'default'}}" formType="submit" >share</button>
+</view>
+<!--
+<button class="{{sharescreen_p?'buttonhover_share':'default'}}" formType="submit" >share</button>
+-->
+</view>
+</form>
 </view>
 
 <view style="width:100%; display: flex; flex-direction:row;align-items: center">
